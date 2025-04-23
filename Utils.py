@@ -2,8 +2,9 @@ import os.path
 
 dataset_path = '../datasets/iam_words/words.txt'
 
-def get_img_path_and_text(partition_split_file, is_word):
+def get_img_path_and_text(partition_split_file):
     paths_and_texts = []
+
     with open(partition_split_file) as f:
         partition_folder = f.readlines()
     partition_folder = [x.strip() for x in partition_folder]
