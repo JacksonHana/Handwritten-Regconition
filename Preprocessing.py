@@ -1,58 +1,68 @@
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
+from pathlib import Path
 
-def add_padding(image, target_width, target_height):
-    # Get the current dimensions of the image
-    height, width = image.shape[:2]
 
-    # Calculate the padding needed for width and height
-    pad_width = (target_width - width) // 2
-    pad_height = (target_height - height) // 2
+def add_padding(img, old_w, old_h, new_w, new_h):
+    h1, h2 = int((new_h - old_h) / 2), int((new_h - old_h) / 2) + old_h
+    w1, w2 = int((new_w - old_w) / 2), int((new_w - old_w) / 2) + old_w
+    img_pad = np.ones([new_h, new_w, 3]) * 255
+    img_pad[h1:h2, w1:w2, :] = img
+    return img_pad
 
-    # Add padding to the image
-    padded_image = cv.copyMakeBorder(image, pad_height, pad_height, pad_width, pad_width,
-                                     cv.BORDER_CONSTANT, value=[0, 0, 0])
 
-    return padded_image
-def fix_size(img, width, height):
+def fix_size(img, target_w, target_h):
     h, w = img.shape[:2]
-    if w < width and h < height:
-        img = add_padding(img, w, h, width, height)
-    elif w >= width and h < height:
-        new_w = width
+    if w < target_w and h < target_h:
+        img = add_padding(img, w, h, target_w, target_h)
+    elif w >= target_w and h < target_h:
+        new_w = target_w
         new_h = int(h * new_w / w)
         new_img = cv.resize(img, (new_w, new_h), interpolation=cv.INTER_AREA)
-        img = add_padding(new_img, new_w, new_h, width, height)
-    elif w < width and h >= height:
-        new_h = height
+        img = add_padding(new_img, new_w, new_h, target_w, target_h)
+    elif w < target_w and h >= target_h:
+        new_h = target_h
         new_w = int(w * new_h / h)
         new_img = cv.resize(img, (new_w, new_h), interpolation=cv.INTER_AREA)
-        img = add_padding(new_img, new_w, new_h, width, height)
+        img = add_padding(new_img, new_w, new_h, target_w, target_h)
     else:
         '''w>=target_w and h>=target_h '''
-        ratio = max(w / width, h / height)
-        new_w = max(min(width, int(w / ratio)), 1)
-        new_h = max(min(height, int(h / ratio)), 1)
+        ratio = max(w / target_w, h / target_h)
+        new_w = max(min(target_w, int(w / ratio)), 1)
+        new_h = max(min(target_h, int(h / ratio)), 1)
         new_img = cv.resize(img, (new_w, new_h), interpolation=cv.INTER_AREA)
-        img = add_padding(new_img, new_w, new_h, width, height)
+        img = add_padding(new_img, new_w, new_h, target_w, target_h)
     return img
 
-def preprocess_image(image_path, img_width, img_height):
-    # Read the image
-    img = cv.imread(image_path)
 
-    # Resize the image using fix size
-    img = fix_size(img, img_width, img_height)
+def preprocess(path, img_w, img_h):
+    """ Pre-processing image for predicting """
+    # path = path.replace("\\", "/")
+    print(path)
+    img = cv.imread(path)
+    print('------------')
+    # print(path)
+    # img = Image.open(path)
+    print(img)
+    # img.show()
+    img = fix_size(img, img_w, img_h)
 
     img = np.clip(img, 0, 255)
     img = np.uint8(img)
     img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-    # Normalize the pixel values to the range [0, 1]
-    img = img / 255.0
-
-    # Convert to float32
     img = img.astype(np.float32)
-
+    img /= 255
     return img
+
+
+if __name__ == '__main__':
+    img = cv.imread('../IAM_lines/lines/a01/a01-000u/a01-000u-00.png', 0)
+    plt.imshow(img, cmap='gray')
+    plt.show()
+    img = preprocess('../IAM_lines/lines/a01/a01-000u/a01-000u-00.png', 800, 64)
+    print(img.shape)
+    plt.imshow(img, cmap='gray')
+    plt.show()
