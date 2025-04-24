@@ -1,5 +1,6 @@
 from parameter import *
-from keras import backend as K
+# from keras.src.backend import ctc_batch_cost
+import tensorflow.python.keras.backend as K
 import tensorflow as tf
 from keras.src.layers.convolutional.conv2d import Conv2D
 from keras.src.layers.pooling.max_pooling2d import MaxPooling2D
