@@ -58,12 +58,12 @@ class TextImageGenerator:
             # width and height are backwards from typical Keras convention
             # because width is the time dimension when it gets fed into the RNN
             if K.image_data_format() == 'channels_first':
-                X_data = np.ones([self.batch_size, 1, self.img_w, self.img_h])
+                X_data = np.ones([self.batch_size, 1, self.img_w, self.img_h], dtype=np.float32)
             else:
-                X_data = np.ones([self.batch_size, self.img_w, self.img_h, 1])
-            Y_data = np.zeros([self.batch_size, self.max_text_len])
-            input_length = np.ones((self.batch_size, 1)) * self.i_len
-            label_length = np.zeros((self.batch_size, 1))
+                X_data = np.ones([self.batch_size, self.img_w, self.img_h, 1], dtype=np.float32)
+            Y_data = np.zeros([self.batch_size, self.max_text_len], dtype=np.float32)
+            input_length = np.ones((self.batch_size, 1), dtype=np.float32) * self.i_len
+            label_length = np.zeros((self.batch_size, 1), dtype=np.float32)
 
             for i in range(self.batch_size):
                 img, text = self.next_sample()
@@ -82,5 +82,5 @@ class TextImageGenerator:
                 'input_length': input_length,
                 'label_length': label_length,
             }
-            outputs = {'ctc': np.zeros([self.batch_size])}
+            outputs = np.zeros([self.batch_size], dtype=np.float32)
             yield (inputs, outputs)

@@ -32,7 +32,7 @@ def train(train_data, val_data, is_word_model):
     print("Number train samples: ", train_set.n)
     print("Number val samples: ", val_set.n)
 
-    model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer='adam')
+    model.compile(loss=lambda y_true, y_pred: y_pred, optimizer='adam')
 
     ckp = ModelCheckpoint(
         filepath='Resource/' + model_name + '--{epoch:02d}--{val_loss:.3f}.weights.h5', monitor='val_loss',
