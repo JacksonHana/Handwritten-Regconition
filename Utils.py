@@ -9,7 +9,7 @@ from Preprocessing import preprocess
 from keras import backend as K
 
 dataset_path_word = '../datasets/iam_words/words_new.txt'
-dataset_path_line = '../datasets/IAM_sentences/metadata/words.txt'
+dataset_path_line = '../datasets/IAM_sentences/metadata/sentences.txt'
 
 def decode_label(out):
     out_best = list(np.argmax(out[0, 2:], 1))
@@ -35,16 +35,15 @@ def decode_batch(out):
 def get_img_path_and_text(partition_split_file, is_words):
     paths_and_texts = []
 
-    with open (partition_split_file) as f:
-            partition_folder = f.readlines()
-    partition_folder = [x.strip() for x in partition_folder]
 
     with open(partition_split_file) as f:
+        print('partition_split_file:',partition_split_file)
         partition_folder = f.readlines()
     partition_folder = [x.strip() for x in partition_folder]
 
     if is_words:
         with open(dataset_path_word) as f:
+            print('dataset_path_word: ',dataset_path_word)
             for line in f:
                 if not line or line.startswith('#'):  # comment in txt file
                     continue
@@ -80,7 +79,7 @@ def get_img_path_and_text(partition_split_file, is_words):
                 label_dir = file_name_split[0]
                 sub_label_dir = '{}-{}'.format(file_name_split[0], file_name_split[1])
                 fn = '{}.png'.format(line_split[0])
-                img_path = os.path.join('/datasets/IAM_sentences/metadata', label_dir, sub_label_dir, fn)
+                img_path = os.path.join('datasets/IAM_sentences/dataset', label_dir, sub_label_dir, fn)
                 gt_text = ' '.join(line_split[8:])
                 gt_text = gt_text.replace('|', ' ')
                 l = len(gt_text)

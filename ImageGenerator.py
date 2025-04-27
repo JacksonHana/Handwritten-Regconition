@@ -36,10 +36,11 @@ class TextImageGenerator:
         self.cur_index = 0
 
     def build_data(self):
-        self.imgs = np.zeros((self.n, self.img_h, self.img_w))
+        self.imgs = np.zeros((self.n, self.img_h, self.img_w), dtype=np.float32)
         self.texts = []
 
         for i, (img_filepath, text) in enumerate(self.samples):
+            print('img_filepath: ',img_filepath)
             # img_filepath = Path(img_filepath).as_posix()    # /
             img_filepath = Path(img_filepath).resolve()
             img = preprocess(img_filepath, self.img_w, self.img_h)

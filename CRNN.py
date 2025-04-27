@@ -2,15 +2,21 @@ from parameter import *
 # from keras.src.backend import ctc_batch_cost
 import tensorflow.python.keras.backend as K
 import tensorflow as tf
-from keras.src.layers.convolutional.conv2d import Conv2D
-from keras.src.layers.pooling.max_pooling2d import MaxPooling2D
-from keras.api.layers import Input, Dense, Activation, Reshape, Lambda, BatchNormalization
-from keras.api.models import Model
-from keras.src.layers.rnn.gru import GRU
-# from keras.api.layers.merge import add, concatenate
-from keras.src.layers.merging.add import add
-from keras.src.layers.merging.concatenate import concatenate
-
+# from keras.src.layers.convolutional.conv2d import Conv2D
+# from keras.src.layers.pooling.max_pooling2d import MaxPooling2D
+# from keras.api.layers import Input, Dense, Activation, Reshape, Lambda, BatchNormalization
+# from keras.api.models import Model
+# from keras.src.layers.rnn.gru import GRU
+# # from keras.api.layers.merge import add, concatenate
+# from keras.src.layers.merging.add import add
+# from keras.src.layers.merging.concatenate import concatenate
+from keras.layers.convolutional import Conv2D, MaxPooling2D
+from keras.layers import Input, Dense, Activation, Reshape, Lambda, BatchNormalization
+from keras.models import Model
+from keras.layers.rnn.gru import GRU
+# from keras.layers.merge import add, concatenate
+from keras.layers.merging.add import add
+from keras.layers.merging.concatenate import concatenate
 
 def ctc_lambda_func(args):
     y_pred, labels, input_length, label_length = args
@@ -129,7 +135,7 @@ def line_model():
     else:
         input_shape = (img_w, img_h, 1)
 
-    # Make Networkw
+    # Make Network
     input_data = Input(name='the_input', shape=input_shape, dtype='float32')  # (None, 800, 64, 1)
 
     # Convolution layer

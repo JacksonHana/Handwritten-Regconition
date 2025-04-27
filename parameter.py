@@ -12,7 +12,7 @@ word_cfg = {
 }
 
 line_cfg = {
-	'batch_size': 16,
+	'batch_size': 2,
 	'input_length': 98,
 	'model_name': 'iam_line',
 	'max_text_len': 74,

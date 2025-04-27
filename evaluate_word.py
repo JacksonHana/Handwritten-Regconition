@@ -3,7 +3,7 @@ from Utils import *
 from sklearn.model_selection import train_test_split
 import editdistance
 from spell import correction
-from keras.api.models import model_from_json
+from keras.models import model_from_json
 # from ImageGenerator import TextImageGenerator
 
 if __name__=='__main__':
